@@ -13,8 +13,9 @@ datasource db {
 
 model user {
   id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
+  login         String
   username      String
-  password      String @default("")
+  password      String?
   role          String @default("MANAGER")
   post          String
 }

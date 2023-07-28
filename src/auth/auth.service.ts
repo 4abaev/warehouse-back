@@ -1,26 +1,66 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { AuthDto } from './dto/auth.dto';
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
+  ) {}
+
+  async regist(dto: CreateUserDto) {
+    const candidate = await this.usersService.findByLogin(dto.login);
+
+    if (candidate) {
+      throw new HttpException(
+        'Пользователь с таким логином уже существует',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const user = await this.usersService.create(dto);
+    const { token } = await this.generateToken(user);
+    return { user, token };
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async login(dto: AuthDto) {
+    const user = await this.validateUser(dto);
+    const { token } = await this.generateToken(user);
+    return { user, token };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  async validateUser(dto: AuthDto) {
+    const user = await this.usersService.findByLogin(dto.login);
+
+    if (!user) {
+      throw new UnauthorizedException('Пользователь с таким логином не найден');
+    }
+
+    if (user.password) {
+      if (user.password === dto.password) {
+        return user;
+      } else {
+        throw new UnauthorizedException('Пароли не верный');
+      }
+    } else {
+      return user;
+    }
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  private async generateToken(user: CreateUserDto) {
+    const payload = {
+      role: user.role,
+      id: user.id,
+    };
+    return {
+      token: this.jwtService.sign(payload),
+    };
   }
 }

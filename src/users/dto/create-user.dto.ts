@@ -4,8 +4,14 @@ export class CreateUserDto {
   id: string;
 
   @IsString()
+  @Length(4, 16, {
+    message: 'Логин пользователя должен содержать от 4 до 16 символов',
+  })
+  login: string;
+
+  @IsString()
   @Length(4, 50, {
-    message: 'Имя пользователя должно содержать от 4 до 50 символов',
+    message: 'ФИО пользователя должны содержать от 4 до 50 символов',
   })
   username: string;
 
