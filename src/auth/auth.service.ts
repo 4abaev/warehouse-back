@@ -47,7 +47,7 @@ export class AuthService {
       if (user.password === dto.password) {
         return user;
       } else {
-        throw new UnauthorizedException('Пароли не верный');
+        throw new UnauthorizedException('Пароль не верный');
       }
     } else {
       return user;
@@ -56,7 +56,6 @@ export class AuthService {
 
   private async generateToken(user: CreateUserDto) {
     const payload = {
-      role: user.role,
       id: user.id,
     };
     return {

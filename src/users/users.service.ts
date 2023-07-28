@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma.service';
+import { RenderUser } from 'src/utils/render.user';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +18,11 @@ export class UsersService {
         data: { ...createUserDto, role: 'ADMIN' },
       });
     }
+  }
+
+  async getMe(req) {
+    const user = await this.findOne(req.user.id);
+    return new RenderUser(user);
   }
 
   async findAll() {
