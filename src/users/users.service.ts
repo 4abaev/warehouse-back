@@ -27,7 +27,7 @@ export class UsersService {
 
   async findAll() {
     const users = await this.prisma.user.findMany();
-    return users;
+    return users.map((u) => new RenderUser(u));
   }
 
   async findByLogin(login: string) {

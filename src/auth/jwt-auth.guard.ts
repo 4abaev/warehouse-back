@@ -20,10 +20,17 @@ export class JwtAuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest();
     try {
-      const authHeader = req.headers.authorization;
-      const bearer = authHeader.split(' ')[0];
-      const token = authHeader.split(' ')[1];
-
+      const cookiesString = req.headers.cookie;
+      const tokenStartIndex = cookiesString.indexOf('token=');
+      const authHeader = cookiesString
+        .substring(tokenStartIndex + 6)
+        .split(';')[0];
+      // const authHeader = req.headers.authorization;
+      // const bearer = authHeader.split(' ')[0];
+      // const token = authHeader.split(' ')[1];
+      const bearer = authHeader.split('_')[0];
+      const token = authHeader.split('_')[1];
+      console.log(bearer, token);
       if (bearer !== 'Bearer' || !token) {
         throw new UnauthorizedException({
           message: 'Пользователь не авторизован',

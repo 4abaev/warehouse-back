@@ -8,6 +8,7 @@ import { AuthDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  async regist(dto: CreateUserDto) {
+  async register(dto: CreateUserDto, res: Response) {
     const candidate = await this.usersService.findByLogin(dto.login);
 
     if (candidate) {
@@ -27,13 +28,23 @@ export class AuthService {
     }
     const user = await this.usersService.create(dto);
     const { token } = await this.generateToken(user);
-    return { user, token };
+    res.cookie('token', `Bearer_${token}`, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      domain: 'localhost',
+    });
+    return { message: 'Регистрация успешна' };
   }
 
-  async login(dto: AuthDto) {
+  async login(dto: AuthDto, res: Response) {
     const user = await this.validateUser(dto);
     const { token } = await this.generateToken(user);
-    return { user, token };
+    res.cookie('token', `Bearer_${token}`, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      domain: 'localhost',
+    });
+    return { message: 'Авторизация успешна' };
   }
 
   async validateUser(dto: AuthDto) {

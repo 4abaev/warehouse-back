@@ -19,3 +19,38 @@ model user {
   role          String @default("MANAGER")
   post          String
 }
+
+model Category {
+  id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
+  name          String
+  products      Product[]
+}
+
+model Product {
+  id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
+  description   String
+  cost          Float
+  brand         String
+  articul       String
+  picture       String
+  categoryId    String? @db.Uuid
+  category      Category? @relation(fields: [categoryId], references: [id])
+  orderProducts OrderProduct[]
+}
+
+model Order {
+  id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
+  comment       String
+  totalCost     Float
+  createdAt     DateTime   @default(now())
+  products      OrderProduct[]
+}
+
+model OrderProduct {
+  id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
+  quantity      Int
+  orderId       String @db.Uuid
+  productId     String @db.Uuid
+  order         Order    @relation(fields: [orderId], references: [id])
+  product       Product  @relation(fields: [productId], references: [id])
+}

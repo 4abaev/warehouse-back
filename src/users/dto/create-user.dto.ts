@@ -8,8 +8,8 @@ export class CreateUserDto {
     default: 'vlad123',
   })
   @IsString()
-  @Length(4, 16, {
-    message: 'Логин пользователя должен содержать от 4 до 16 символов',
+  @Length(4, 50, {
+    message: 'Логин пользователя должен содержать от 4 до 50 символов',
   })
   login: string;
 
@@ -17,8 +17,8 @@ export class CreateUserDto {
     default: 'Иванов Иван Иванович',
   })
   @IsString()
-  @Length(4, 50, {
-    message: 'ФИО пользователя должны содержать от 4 до 50 символов',
+  @Length(4, 100, {
+    message: 'ФИО пользователя должны содержать от 4 до 100 символов',
   })
   username: string;
 
@@ -29,7 +29,10 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  @IsString()
+  @ApiProperty({
+    default: 'Менеджер',
+  })
+  @IsOptional()
   role: string;
 
   @ApiProperty({

@@ -9,9 +9,15 @@ export class AuthDto {
   login: string;
 
   @ApiProperty({
-    default: '12345qwerty',
+    example: '123qwerty',
+    required: false,
   })
   @IsOptional()
   @IsString()
   password: string;
+}
+
+export class TokenResponseDto {
+  @ApiProperty({ type: String })
+  token: string;
 }
