@@ -20,28 +20,33 @@ model user {
   post          String
 }
 
-model Category {
-  id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
-  name          String
-  products      Product[]
-}
-
+// model Category {
+//   id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
+//   name          String
+//   products      Product[]
+// }
+  // category      Category? @relation(fields: [categoryId], references: [id])
 model Product {
   id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   description   String
-  cost          Float
   brand         String
   articul       String
   picture       String
-  categoryId    String? @db.Uuid
-  category      Category? @relation(fields: [categoryId], references: [id])
+  category      String
+  createdAt   DateTime @default(dbgenerated("now()"))
+  updatedAt     DateTime @updatedAt 
   orderProducts OrderProduct[]
 }
 
+enum Status {
+  warehouseOrder
+  Order
+  Sale
+}
 model Order {
   id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   comment       String
-  totalCost     Float
+  status        Status
   createdAt     DateTime   @default(now())
   products      OrderProduct[]
 }

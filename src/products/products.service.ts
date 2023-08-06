@@ -16,22 +16,18 @@ export class ProductsService {
     return await this.prismaService.product.create({
       data: {
         ...createProductDto,
-        cost: Number(createProductDto.cost),
         picture: picturePath,
       },
     });
   }
 
   async findAll() {
-    return await this.prismaService.product.findMany({
-      include: { category: true },
-    });
+    return await this.prismaService.product.findMany({});
   }
 
   async findOne(id: string) {
     return await this.prismaService.product.findUnique({
       where: { id: id },
-      include: { category: true },
     });
   }
 

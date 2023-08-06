@@ -1,19 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateProductDto {
+  @IsNotEmpty()
+  @IsString()
   @ApiProperty({
     default: '0203039',
   })
   articul: string;
+
+  @IsNotEmpty()
+  @IsString()
   @ApiProperty({
     default: 'Аспирин',
   })
   description: string;
-  @ApiProperty({
-    default: '500',
-  })
-  cost: number;
+
+  @IsNotEmpty()
+  @IsString()
   @ApiProperty({
     default: 'Эвалар',
   })
@@ -24,10 +28,12 @@ export class CreateProductDto {
   })
   picture: any;
 
+  @IsNotEmpty()
+  @IsString()
   @ApiProperty({
-    default: '74bfcfbd-9ab9-4e3a-a29e-c7d92d741d2c',
+    default: 'Лекарства',
   })
-  categoryId?: string;
+  category: string;
 }
 
 export class getProductsResponse {

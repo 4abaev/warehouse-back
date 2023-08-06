@@ -7,12 +7,12 @@ export class OrdersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    const { comment, totalCost, products } = createOrderDto;
+    const { comment, status, products } = createOrderDto;
 
     const order = await this.prismaService.order.create({
       data: {
         comment,
-        totalCost,
+        status,
         products: {
           create: products.map((product) => ({
             quantity: product.quantity,

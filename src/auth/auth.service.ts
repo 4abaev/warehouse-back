@@ -33,7 +33,7 @@ export class AuthService {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       domain: 'localhost',
     });
-    return { message: 'Регистрация успешна' };
+    return token;
   }
 
   async login(dto: AuthDto, res: Response) {
@@ -44,7 +44,7 @@ export class AuthService {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       domain: 'localhost',
     });
-    return { message: 'Авторизация успешна' };
+    return token;
   }
 
   async validateUser(dto: AuthDto) {
@@ -54,7 +54,7 @@ export class AuthService {
       throw new UnauthorizedException('Пользователь с таким логином не найден');
     }
 
-    if (user.password) {
+    if (user.password && user.role === 'ADMIN') {
       if (user.password === dto.password) {
         return user;
       } else {

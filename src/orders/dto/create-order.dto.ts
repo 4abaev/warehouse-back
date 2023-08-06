@@ -10,6 +10,12 @@ export class getOrdersResponse {
   orders: CreateOrderDto[];
 }
 
+export enum Status {
+  warehouseOrder = 'warehouseOrder',
+  Order = 'Order',
+  Sale = 'Sale',
+}
+
 export class CreateOrderDto {
   @ApiProperty({
     default: 'Заказ для бабушки',
@@ -22,8 +28,7 @@ export class CreateOrderDto {
     default: 100000,
   })
   @IsNotEmpty()
-  @IsNumber()
-  totalCost: number;
+  status: Status;
 
   @ApiProperty({ type: () => [CreateOrderProductItemDto] })
   @ValidateNested({ each: true })
