@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   UploadedFiles,
   UseInterceptors,
+  Patch,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import {
@@ -29,9 +30,9 @@ export class ProductsController {
   @ApiResponse({ status: 200, type: CreateProductDto })
   @UseInterceptors(FileFieldsInterceptor([{ name: 'picture', maxCount: 1 }]))
   @Post()
-  create(@UploadedFiles() files, @Body() CreateProductDto: CreateProductDto) {
+  create(@UploadedFiles() files, @Body() createProductDto: CreateProductDto) {
     const { picture } = files;
-    return this.productsService.create(CreateProductDto, picture[0]);
+    return this.productsService.create(createProductDto, picture[0]);
   }
 
   @ApiOperation({ summary: 'Получить все продукты' })
@@ -46,6 +47,18 @@ export class ProductsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
+  }
+  @ApiOperation({ summary: 'Обновить продукт по id' })
+  @ApiResponse({ status: 200, type: CreateProductDto })
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'picture', maxCount: 1 }]))
+  @Patch(':id')
+  update(
+    @UploadedFiles() files,
+    @Body() createProductDto: CreateProductDto,
+    @Param('id') id: string,
+  ) {
+    const { picture } = files;
+    return this.productsService.update(id, createProductDto, picture[0]);
   }
 
   @ApiOperation({ summary: 'Удалить продукт' })

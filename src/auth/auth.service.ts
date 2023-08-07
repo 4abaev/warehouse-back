@@ -17,7 +17,7 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  async register(dto: CreateUserDto, res: Response) {
+  async register(dto: CreateUserDto) {
     const candidate = await this.usersService.findByLogin(dto.login);
 
     if (candidate) {
@@ -28,22 +28,13 @@ export class AuthService {
     }
     const user = await this.usersService.create(dto);
     const { token } = await this.generateToken(user);
-    res.cookie('token', `Bearer_${token}`, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      domain: 'localhost',
-    });
-    return token;
+
+    return { token, user };
   }
 
-  async login(dto: AuthDto, res: Response) {
+  async login(dto: AuthDto) {
     const user = await this.validateUser(dto);
     const { token } = await this.generateToken(user);
-    res.cookie('token', `Bearer_${token}`, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      domain: 'localhost',
-    });
     return token;
   }
 

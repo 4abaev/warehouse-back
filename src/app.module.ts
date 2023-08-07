@@ -18,7 +18,7 @@ import * as path from 'path';
     ConfigModule.forRoot(),
     FileModule,
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, 'static'),
+      rootPath: path.resolve(__dirname, '..', 'uploads'),
     }),
   ],
   controllers: [],

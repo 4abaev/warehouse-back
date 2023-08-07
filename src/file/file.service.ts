@@ -13,7 +13,7 @@ export class FileService {
     try {
       const fileExtencion = file.originalname.split('.').pop();
       const fileName = uuid.v4() + '.' + fileExtencion;
-      const filePath = path.resolve(__dirname, '..', 'static', type);
+      const filePath = path.resolve(__dirname, '..', '..', 'uploads', type);
       if (!fs.existsSync(filePath)) {
         fs.mkdirSync(filePath, { recursive: true });
       }
@@ -21,6 +21,18 @@ export class FileService {
       return type + '/' + fileName;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  deleteFile(filePath: string) {
+    try {
+      const fullPath = path.resolve(__dirname, '..', '..', 'uploads', filePath);
+      fs.unlinkSync(fullPath);
+    } catch (error) {
+      throw new HttpException(
+        'Ошибка при удалении файла',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
