@@ -20,12 +20,6 @@ model user {
   post          String
 }
 
-// model Category {
-//   id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
-//   name          String
-//   products      Product[]
-// }
-  // category      Category? @relation(fields: [categoryId], references: [id])
 model Product {
   id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   description   String
@@ -33,29 +27,27 @@ model Product {
   articul       String
   picture       String
   category      String
-  createdAt   DateTime @default(dbgenerated("now()"))
+  createdAt     DateTime @default(dbgenerated("now()"))
   updatedAt     DateTime @updatedAt 
-  orderProducts OrderProduct[]
 }
 
 enum Status {
+  Created
+  Done
+}
+
+enum Flag {
   warehouseOrder
   Order
   Sale
 }
+
 model Order {
   id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   comment       String
-  status        Status
-  createdAt     DateTime   @default(now())
-  products      OrderProduct[]
-}
-
-model OrderProduct {
-  id            String @id @db.Uuid @default(dbgenerated("gen_random_uuid()"))
-  quantity      Int
-  orderId       String @db.Uuid
-  productId     String @db.Uuid
-  order         Order    @relation(fields: [orderId], references: [id])
-  product       Product  @relation(fields: [productId], references: [id])
+  totalCost     Int
+  flag          Flag
+  status        Status    
+  createdAt     DateTime  @default(now())
+  products      Json      @map("products_json")
 }

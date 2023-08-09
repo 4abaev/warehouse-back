@@ -10,10 +10,15 @@ export class getOrdersResponse {
   orders: CreateOrderDto[];
 }
 
-export enum Status {
+export enum Flag {
   warehouseOrder = 'warehouseOrder',
   Order = 'Order',
   Sale = 'Sale',
+}
+
+enum Status {
+  Created = 'Created',
+  Done = 'Done',
 }
 
 export class CreateOrderDto {
@@ -25,10 +30,22 @@ export class CreateOrderDto {
   comment: string;
 
   @ApiProperty({
-    default: 100000,
+    default: 'warehouseOrder',
+  })
+  @IsNotEmpty()
+  flag: Flag;
+
+  @ApiProperty({
+    default: 'Created',
   })
   @IsNotEmpty()
   status: Status;
+
+  @ApiProperty({
+    default: 100000,
+  })
+  @IsNotEmpty()
+  totalCost: number;
 
   @ApiProperty({ type: () => [CreateOrderProductItemDto] })
   @ValidateNested({ each: true })
@@ -39,9 +56,41 @@ export class CreateOrderDto {
 export class CreateOrderProductItemDto {
   @IsNotEmpty()
   @IsString()
-  productId: string;
+  @ApiProperty({
+    default: '0203039',
+  })
+  articul: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    default: 'Аспирин',
+  })
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    default: 'Эвалар',
+  })
+  brand: string;
+
+  @ApiProperty({
+    default: 'Файл изображения',
+  })
+  picture: any;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    default: 'Лекарства',
+  })
+  category: string;
 
   @IsNotEmpty()
   @IsNumber()
-  quantity: number;
+  @ApiProperty({
+    default: '100',
+  })
+  cost: number;
 }

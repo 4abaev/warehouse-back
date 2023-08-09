@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, getOrdersResponse } from './dto/create-order.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -17,7 +8,6 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @UsePipes(new ValidationPipe())
   @ApiOperation({ summary: 'Создание заказа' })
   @ApiBody({ type: CreateOrderDto })
   @ApiResponse({ status: 200, type: CreateOrderDto })

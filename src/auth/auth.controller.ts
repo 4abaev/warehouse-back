@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto, TokenResponseDto } from './dto/auth.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -15,7 +9,6 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UsePipes(new ValidationPipe())
   @ApiOperation({ summary: 'Регистрация' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 200, type: TokenResponseDto })
@@ -24,7 +17,6 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @UsePipes(new ValidationPipe())
   @ApiOperation({ summary: 'Авторизация' })
   @ApiBody({ type: AuthDto })
   @ApiResponse({ status: 200, type: TokenResponseDto })

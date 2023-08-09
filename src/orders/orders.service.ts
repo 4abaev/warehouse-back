@@ -7,23 +7,12 @@ export class OrdersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    const { comment, status, products } = createOrderDto;
+    const { products } = createOrderDto;
 
     const order = await this.prismaService.order.create({
       data: {
-        comment,
-        status,
-        products: {
-          create: products.map((product) => ({
-            quantity: product.quantity,
-            product: {
-              connect: { id: product.productId },
-            },
-          })),
-        },
-      },
-      include: {
-        products: true,
+        ...createOrderDto,
+        products: JSON.stringify(products),
       },
     });
 
@@ -31,15 +20,18 @@ export class OrdersService {
   }
 
   async findAll() {
-    return await this.prismaService.order.findMany({
-      include: { products: true },
-    });
+    const orders = await this.prismaService.order.findMany({});
+
+    const ordersWithArrayProducts = orders.map((order) => ({
+      ...order,
+    }));
+
+    return ordersWithArrayProducts;
   }
 
   async findOne(id: string) {
     return await this.prismaService.order.findUnique({
       where: { id: id },
-      include: { products: true },
     });
   }
 

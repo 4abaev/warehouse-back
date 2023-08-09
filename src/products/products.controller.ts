@@ -5,8 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UsePipes,
-  ValidationPipe,
   UploadedFiles,
   UseInterceptors,
   Patch,
@@ -24,7 +22,6 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @UsePipes(new ValidationPipe())
   @ApiOperation({ summary: 'Создание продукта' })
   @ApiBody({ type: CreateProductDto })
   @ApiResponse({ status: 200, type: CreateProductDto })
@@ -48,6 +45,7 @@ export class ProductsController {
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
   }
+
   @ApiOperation({ summary: 'Обновить продукт по id' })
   @ApiResponse({ status: 200, type: CreateProductDto })
   @UseInterceptors(FileFieldsInterceptor([{ name: 'picture', maxCount: 1 }]))

@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const PORT = process.env.APP_PORT || 4000;
@@ -21,12 +22,18 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.enableCors({
     origin: [
+      'http://localhost:3001',
       configService.get('FRONTEND_URL_HTTP'),
       configService.get('FRONTEND_URL_HTTPS'),
     ],
     credentials: true,
   });
 
+  await app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
   await app.listen(PORT, () => {
     console.log(`App started at ${PORT}`);
   });
